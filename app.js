@@ -37,7 +37,16 @@ const tasks = [
         return acc;
     }, {});
 
+    //Elements UI
+    const listConteiner = document.querySelector(
+        ".task-list-section .list-group"
+    );
+    const form = document.forms["addTask"];
+    const inputTitle = form.elements["title"];
+    const inputBody = form.elements["body"];
+
     renderAllTasks(objectOfTasks);
+    form.addEventListener("submit", onFormSubmitHendler);
 
     function renderAllTasks(tasksList) {
         if (!tasksList) {
@@ -46,10 +55,11 @@ const tasks = [
         }
 
         const fragment = document.createDocumentFragment();
-
         Object.values(tasksList).forEach(task => {
             const li = listItemTemplate(task);
+            fragment.appendChild(li);
         });
+        listConteiner.appendChild(fragment);
     }
 
     function listItemTemplate({ _id, title, body } = {}) {
@@ -75,5 +85,30 @@ const tasks = [
         li.appendChild(span);
         li.appendChild(deleteBtn);
         li.appendChild(article);
+
+        return li;
+    }
+
+    function onFormSubmitHendler(e) {
+        e.preventDefault();
+        const titleValue = inputTitle.value;
+        const bodyValue = inputBody.value;
+
+        if (!titleValue || !bodyValue) {
+            alert("Пожалуйста введите заголовок и тело сообщения");
+            return;
+        }
+        const task = createNewTask(titleValue, bodyValue);
+    }
+    function createNewTask(title, body) {
+        const newTask = {
+            title,
+            body,
+            completed: false,
+            _id: `task-${Math.random()}`
+        };
+
+        objectOfTasks[newTask._id] = newTask;
+        return { ...newTask };
     }
 })(tasks);
