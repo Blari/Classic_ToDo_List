@@ -99,6 +99,9 @@ const tasks = [
             return;
         }
         const task = createNewTask(titleValue, bodyValue);
+        const listItem = listItemTemplate(task);
+        listConteiner.insertAdjacentElement("afterbegin", listItem);
+        form.reset();
     }
     function createNewTask(title, body) {
         const newTask = {
